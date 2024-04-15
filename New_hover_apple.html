@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+            font-family: sans-serif; 
+        }
+         :root{
+            --clr:white;
+        }
+        body{
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--clr); 
+        }
+        .nav{
+            position: relative;
+            top:100px;
+            width:250px;
+            height: 60px;
+            background:rgb(46, 46, 46);
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            margin: auto;
+        }
+        .nav ul{
+            display:flex;
+            width: 400px;
+        }
+        .nav ul li{
+            position: relative;
+            list-style: none;
+            width:79px;
+            height:60px ;
+            z-index: 1;
+        }
+        .nav ul li a{
+            position:relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;           
+            width: 95%;
+            margin-left: 8px;
+            animation: box;
+            animation-duration: 1s;
+            animation-delay: 0.5s;
+        }
+        .nav ul li a .icon{
+            position: relative;
+            display:block;
+            line-height: 60px;
+            font-size: 1.2rem;
+            text-align: center;
+            transition: 0.5s;
+            color:var(--clr);
+        }
+        
+        .nav ul li:active a .icon{
+            transform: translateY(-40px);
+        }
+        .ind{
+            position: absolute;
+            top:-68%;
+            left: 6%;
+            width:60px;
+            height: 60px;
+            background: greenyellow;
+            border-radius: 50%;
+            border: 6px solid white;
+            transition: 0.5s;
+        }
+        .ind::before{
+            content: '';
+            position: absolute;
+            top:73%;
+            left:-8.7px;
+            width: 10px;
+            height: 10px;
+            background:transparent;
+            border-top-right-radius: 20px;
+            box-shadow: 1px -1px 0 white;
+        }
+        .ind::after{
+            content: '';
+            position: absolute;
+            top:72%;
+            left:48px;
+            width: 10px;
+            height: 10px;
+            background:transparent;
+            border-top-left-radius: 20px;
+            box-shadow: -3px 0px 0 white;
+        }
+        .nav ul li:nth-child(1).active ~ .ind{
+            transform: translateX(calc(100px * 0));
+        }
+        .nav ul li:nth-child(2).active ~ .ind{
+            transform: translateX(calc(100px * 1));
+        }
+        .nav ul li:nth-child(3).active ~ .ind{
+            transform: translateX(calc(100px * 2));
+        }
+        img{
+            height:250px;
+            width: 250px;
+            position: relative;
+            top:70px;
+            left:570px;
+        }
+
+        .popup-heart {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: red;
+            animation: fadeInOut 3s linear;
+            border-radius: 50%;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+                font-size: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style=" display: flex; flex-direction: column;  align-items:baseline;">
+    <img src="Untitled.png" alt="" id="mainImage">
+    <div class="nav">
+        <ul>
+            <li class="list active ">
+                <a href="#">
+                    <span class="icon">
+                        <i class="fa fa-heart"></i>   
+                    </span>
+                </a>
+            </li>
+            <li class="list">
+                <a href="#">
+                    <span class="icon">
+                        <i class="fa fa-share" ></i>
+                    </span>
+                </a>
+            </li>
+            <li class="list">
+                <a href="#">
+                    <span class="icon">
+                        <i class="fa fa-shopping-cart"></i>
+                    </span>
+                </a>
+            </li>
+            <div class="ind"></div>
+        </ul>
+    </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const list = document.querySelectorAll('.list');
+            const indicator = document.querySelector('.ind');
+            let isMouseOverNav = false;
+
+            function moveIndicator(event) {             
+
+                const navRect = event.currentTarget.getBoundingClientRect();
+                const mouseX = event.clientX - navRect.left;
+                const activeIndex = Math.floor(mouseX / (navRect.width / list.length));
+
+                // Move the indicator based on the mouse position
+                indicator.style.transform = `translateX(calc(79px * ${activeIndex}))`;
+            }
+
+            function moveIconToIndicator() {
+                // Move the icon to the indicator
+                const icon = this.querySelector('.icon');
+                icon.style.transform = 'translateY(-40px)';
+            }
+
+            function iconClickHandler() {
+                // Increase size and change color when the icon is clicked
+                const icon = this.querySelector('.icon');
+                icon.style.color = 'red';
+
+                // Create a popup heart
+                const heart = document.createElement('div');
+                heart.className = 'popup-heart';
+                heart.innerHTML = '<i class="fa fa-heart"></i>';
+                document.body.appendChild(heart);
+
+                
+
+                // Set a timer to remove the heart after a short delay
+                setTimeout( function() {
+                    document.body.removeChild(heart);
+                    
+                }, 700);
+            }
+
+            
+            function moveIconBack() {
+                // Move the icon back to its original position and color
+                const icon = this.querySelector('.icon');
+                icon.style.transform = 'translateY(0)';
+                icon.style.color = '';
+            }
+
+            function showIndicator() {
+                indicator.style.display = 'block';
+            }
+
+            function hideIndicator() {
+                indicator.style.display = 'none';
+            }
+
+            // Add mousemove event listener to the navigation to move the indicator
+            document.querySelector('.nav').addEventListener('mousemove', function (event) {
+                moveIndicator(event);
+                showIndicator();
+            });
+
+            // Add mouseleave event listener to the navigation to hide the indicator
+            document.querySelector('.nav').addEventListener('mouseleave', hideIndicator);
+
+            // Add mouseover and mouseout event listeners to each list item to move the icon to the indicator
+            list.forEach((item) => {
+                item.addEventListener('mouseover', moveIconToIndicator);
+                item.addEventListener('mouseleave', moveIconBack);
+                item.addEventListener('click', iconClickHandler);
+               
+            });
+
+            // Set a flag when the mouse is over the navigation
+            document.querySelector('.nav').addEventListener('mouseenter', function () {
+                isMouseOverNav = true;
+            });
+
+            // Clear the flag when the mouse leaves the navigation
+            document.querySelector('.nav').addEventListener('mouseleave', function () {
+                isMouseOverNav = false;
+            });
+        });
+    </script>
+</body>
+</html>
